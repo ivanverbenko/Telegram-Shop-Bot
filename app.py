@@ -13,7 +13,7 @@ from handlers.users.menu import router as menu_router
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
     bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)

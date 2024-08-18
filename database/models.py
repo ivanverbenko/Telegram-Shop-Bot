@@ -1,26 +1,16 @@
 from imghdr import tests
 
-from sqlalchemy import Column, Integer, BigInteger, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, BigInteger, String, Float, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
 from database.database import Base
 
 
-class Hotelstest(Base):
-    __tablename__ = 'hotelstest'
-    id:int = Column(Integer, primary_key=True)
-    count:int = Column(Integer)
-
 class Category(Base):
     __tablename__ = 'category'
     id:Mapped[int] = mapped_column(Integer, primary_key=True)
     name:Mapped[str] = mapped_column(String)
-
-class User(Base):
-    __tablename__ = 'user'
-    id:Mapped[int] = mapped_column(Integer, primary_key=True)
-    telegram_id:Mapped[BigInteger] = mapped_column(BigInteger)
 
 class Product(Base):
     __tablename__ = 'product'
@@ -28,3 +18,13 @@ class Product(Base):
     name:Mapped[str] = mapped_column(String)
     price:Mapped[float] = mapped_column(Float)
     category_id: Mapped[int] = mapped_column(ForeignKey('category.id'))
+
+class Order(Base):
+    __tablename__ = 'order'
+    id:Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_tg:Mapped[BigInteger] = mapped_column(BigInteger)
+    addres:Mapped[str] = mapped_column(String)
+    status:Mapped[str] = mapped_column(String)#todo choices
+    delivered:Mapped[bool] = mapped_column(Boolean)
+    price:Mapped[float] = mapped_column(Float)
+    product_id: Mapped[int] = mapped_column(ForeignKey('product.id'))
