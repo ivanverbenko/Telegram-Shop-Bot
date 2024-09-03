@@ -20,11 +20,11 @@ router = Router()
 @router.message(CommandStart())
 async def cmd_start(message: types.Message):
     user_button = KeyboardButton(text="Каталог")
-    admin_button = KeyboardButton(text='admin_message')
+    status_delivery = KeyboardButton(text='Статус доставки')
 
     markup = ReplyKeyboardMarkup(
         keyboard=[
-            [user_button, admin_button]
+            [user_button, status_delivery]
         ],
         resize_keyboard=True
     )
@@ -32,12 +32,6 @@ async def cmd_start(message: types.Message):
     await message.answer('''Привет! 👋
 
 🤖 Я бот-магазин по подаже товаров любой категории.
-
-🛍️ Чтобы перейти в каталог и выбрать приглянувшиеся 
-товары возпользуйтесь командой /catalog.
-
-❓ Возникли вопросы? Не проблема! Команда /sos поможет 
-связаться с админами, которые постараются как можно быстрее откликнуться.
     ''', reply_markup=markup)
 
 @router.message(F.text=='Каталог')
@@ -132,7 +126,6 @@ async def handle_confirmation(callback: CallbackQuery, state: FSMContext):
     markup=main
     if callback.data == 'confirm_yes':
         user_data = await state.get_data()
-        print(user_data)
         product_id = user_data.get('product_id')
         product_obj = await ProductsDao.get_by_id(id=product_id)
         await OrdersDao.add_item(addres=user_data['address'],status='заказ оформлен',

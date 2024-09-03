@@ -6,6 +6,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 import config
+from handlers.users.admin import admin_router
 from handlers.users.menu import router as menu_router
 
 
@@ -18,6 +19,7 @@ async def main() -> None:
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
     dp.include_router(menu_router)
+    dp.include_router(admin_router)
 
     # And the run events dispatching
     await dp.start_polling(bot)

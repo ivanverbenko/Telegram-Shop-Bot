@@ -22,9 +22,9 @@ class BaseDao:
             return result.scalar()
 
     @classmethod
-    async def find_by(cls, **kwargs):
+    async def get_by(cls, **kwargs):
         """
-        Метод для гибкого поиска объектов по переданным условиям.
+        Метод для гибкого поиска одного объекта по переданным условиям.
         Пример использования:
         await ProductsDao.find_by(category_id=1, name='Product Name')
         """
@@ -33,18 +33,26 @@ class BaseDao:
             conditions = [getattr(cls.model, key) == value for key, value in kwargs.items()]
             query = select(cls.model).where(*conditions)
             result = await session.execute(query)
-            return result.scalars().all()
+            return result.scalar()
 
+    @classmethod
+    async def find_by(cls, **kwargs):
+        async with async_session_maker() as session:
+            conditions = [getattr(cls.model, key) == value for key, value in kwargs.items()]
+            query = select(cls.model).where(*conditions)
+            result = await session.execute(query)
+            return result.scalars().all()
     @classmethod
     async def add_item(cls, **kwargs):
         async with async_session_maker() as session:
-            async with session.begin():  # Открытие транзакции
-                try:
-                    item = cls.model(**kwargs)
-                    session.add(item)
-                    await session.commit()
-                except SQLAlchemyError as e:
-                    await session.rollback()
+            async with session.begin():
+                print('go')
+                item = cls.model(**kwargs)
+                print(item)
+                session.add(item)
+                print('added')
+                await session.commit()
+
 
 class CategoriesDao(BaseDao):
     model = Category
